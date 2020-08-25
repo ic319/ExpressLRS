@@ -119,11 +119,24 @@ void SX127xDriver::SetBandwidthCodingRate(SX127x_Bandwidth bw, SX127x_CodingRate
 
 bool SyncWordOk(uint8_t syncWord)
 {
-  for (int i = 0; i < sizeof(SX127x_AllowedSyncwords); i++)
+  int loIndex = 0;
+  int hiIndex = sizeof(SX127x_AllowedSyncwords) - 1;
+
+  while (loIndex <= hiIndex)
   {
-    if (syncWord == SX127x_AllowedSyncwords[i])
+    int midIndex = (hiIndex + loIndex) / 2;
+
+    if (syncWord == SX127x_AllowedSyncwords[midIndex])
     {
       return true;
+    }
+    else if (syncWord > SX127x_AllowedSyncwords[midIndex])
+    {
+      loIndex = midIndex + 1;
+    }
+    else
+    {
+      hiIndex = midIndex - 1;
     }
   }
   return false;
