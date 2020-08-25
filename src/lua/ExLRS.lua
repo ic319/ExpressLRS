@@ -75,16 +75,16 @@ local function getFlags(element)
 end
 
 local function increase(data)
-    if data.selected > 1 then
-        data.selected = data.selected - 1
+    if data.selected < data.elements then
+        data.selected = data.selected + 1
         --playTone(2000, 50, 0)
     end
     -- if data.selected > data.elements then data.selected = 1 end
 end
 
 local function decrease(data)
-    if data.selected < data.elements then
-        data.selected = data.selected + 1
+    if data.selected > 1 then
+        data.selected = data.selected - 1
         --playTone(2000, 50, 0)
     end
     -- if data.selected < 1 then data.selected = data.elements end
@@ -287,8 +287,7 @@ local function run_func(event)
 
     -- now process key events
     if event == EVT_ROT_LEFT or 
-       event == EVT_PLUS_BREAK or 
-       event == EVT_DOWN_BREAK then
+       event == EVT_VIRTUAL_PREV then
         if selection.state == false then
             decrease(selection)
 			crossfireTelemetryPush(0x2D, {0xEE, 0xEA, 0x00, 0x00})
@@ -312,8 +311,7 @@ local function run_func(event)
             end
 	end
     elseif event == EVT_ROT_RIGHT or 
-           event == EVT_MINUS_BREAK or 
-	   event == EVT_UP_BREAK then
+           event == EVT_VIRTUAL_NEXT then
         if selection.state == false then
             increase(selection)
 			crossfireTelemetryPush(0x2D, {0xEE, 0xEA, 0x00, 0x00})
@@ -336,7 +334,7 @@ local function run_func(event)
 		pushed = true
             end
 	end
-    elseif event == EVT_ENTER_BREAK then
+    elseif event == EVT_VIRTUAL_ENTER then
         selection.state = not selection.state
 
     elseif event == EVT_EXIT_BREAK and selection.state then
